@@ -14,6 +14,8 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 0,
     '@typescript-eslint/no-empty-interface': 0,
 
+    'no-console': 1,
+
     // Import
     'import/order': [
       'error',

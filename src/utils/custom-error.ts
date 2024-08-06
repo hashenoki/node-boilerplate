@@ -36,12 +36,43 @@ export class CustomError extends Error {
 
   get JSON(): ErrorResponse {
     return {
-      errorType: this.errorType,
-      errorMessage: this.message,
+      type: this.errorType,
+      error: this.message,
       errors: this.errors,
       errorRaw: this.errorRaw,
       errorsValidation: this.errorsValidation,
       stack: this.stack,
     };
+  }
+}
+
+export class ValidationError extends CustomError {
+  constructor(error: string | string[], fields: string[] | null = null) {
+    const errors = Array.isArray(error) ? error : [error];
+    super(422, 'Validation', errors.length ? errors[0] : 'Unknown error.', fields ? fields : errors);
+  }
+}
+
+export class BadRequestError extends CustomError {
+  constructor(error: string) {
+    super(400, 'General', error);
+  }
+}
+
+export class AuthorizationError extends CustomError {
+  constructor(error: string) {
+    super(401, 'Unauthorized', error);
+  }
+}
+
+export class ForbiddenError extends CustomError {
+  constructor(error: string) {
+    super(403, 'Forbidden', error);
+  }
+}
+
+export class HttpError extends CustomError {
+  constructor(status: number, error: string) {
+    super(status, 'General', error);
   }
 }

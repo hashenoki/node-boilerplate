@@ -1,15 +1,20 @@
-FROM node:18.4.0 as base
+FROM node:18.12.0 as base
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+RUN corepack prepare pnpm@8.15.6 --activate
 
 COPY . ./
 
 # Install deps
-RUN yarn install --ignore-engines --only=production
+RUN pnpm install
 
 # Build dist
-RUN yarn build
+RUN pnpm build
 
 # Start production image build
-FROM node:18.4.0
+FROM node:18.12.0
 
 # Copy node modules and build directory
 COPY --from=base ./package.json ./

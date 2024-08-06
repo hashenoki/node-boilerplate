@@ -4,33 +4,41 @@
 
 - [Docker](https://www.docker.com/)
 - [Node v18+](https://nodejs.org/) (optional, included in docker image)
-- [Yarn](https://yarnpkg.com/) (optional, included in docker image)
+- [pnpm](https://pnpm.io/) (optional, included in docker image)
 
 ## Development
 
 ```bash
 cp .env.example .env
-yarn install
-yarn docker:dev
+pnpm install
+
+# start docker container with postgres and node
+pnpm docker:dev
+# or start only with node
+pnpm dev
 ```
 
 ## Migrations
 
-`yarn studio` - serves web interface for drizzle studio on https://local.drizzle.studio
+`pnpm db:push` - push database changes during development
 
-`yarn migrate:generate` - creates migration file from changes found in schema files.
+`pnpm db:seed` - seed database with data
 
-`yarn migrate` - runs migrations
+`pnpm migrate:generate` - create a migration from changes in schema
 
-`yarn db:push` - pushes schema changes to the database
+`pnpm migrate` - deploy pending migrations
 
-`yarn db:seed` - seeds the database with initial data (/src/database/seed.ts file)
+`pnpm db:reset` - rollback entire database
 
-`yarn db:reset` - deletes all data and tables from the database
+`pnpm studio` - opens drizzle studio
 
 ## Docker
 
 Build image
 
-`docker build -t node-api .`
+`docker build -t boilerplate .`
+
+Run image:
+
+`docker run -it -p 8000:8000 boilerplate`
 

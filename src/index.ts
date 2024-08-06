@@ -1,6 +1,6 @@
-import 'firebase-functions/logger/compat';
 import 'dotenv/config';
 import { startApp } from 'app';
+import { logger } from 'utils/logger';
 
-console.log('Starting server...');
+logger.info('Starting server...');
 startApp();

@@ -1,6 +1,8 @@
 import { DrizzleError } from 'drizzle-orm';
 import { Request, Response, NextFunction } from 'express';
 
+import { NODE_ENV } from 'config';
+import { ErrorType, reportCrash } from 'utils/crash-reporting';
 import { CustomError } from 'utils/custom-error';
 
 export const errorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
@@ -12,10 +14,19 @@ export const errorHandler = (err: CustomError, req: Request, res: Response, next
     return res.status(err.HttpStatusCode || 500).json(err.JSON);
   }
 
-  console.error('Unknown error', err);
+  reportCrash('Internal server error.', err, ErrorType.HANDLED);
+
+  const extendedError =
+    NODE_ENV === 'development'
+      ? {
+          message: (err as Error).message,
+          stack: (err as Error).stack,
+        }
+      : undefined;
 
   return res.status(500).json({
-    error: '500 - Internal Server Error',
-    message: (err as Error).message,
+    type: 'General',
+    error: 'Internal server error',
+    ...extendedError,
   });
 };
