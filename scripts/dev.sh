@@ -22,4 +22,6 @@ fi
 
 COMPOSE_HTTP_TIMEOUT=120 docker compose -f docker-compose.dev.yml up -d
 
-yarn dev
+# pnpm migrate # Run migrations if using database
+
+pnpm dev

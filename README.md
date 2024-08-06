@@ -16,6 +16,9 @@ pnpm install
 pnpm docker:dev
 # or start only with node
 pnpm dev
+
+# you may need to run migrations too:
+pnpm migrate
 ```
 
 ## Migrations

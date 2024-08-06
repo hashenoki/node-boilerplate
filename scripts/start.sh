@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-yarn start
+# You may want to run migrations here
+# pnpm migrate
+
+pnpm start
