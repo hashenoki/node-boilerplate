@@ -1,16 +1,23 @@
-import Joi, { Schema } from 'joi';
+import { Struct, StructError, assert, validate as sup } from 'superstruct';
 
 import { ValidationError } from './custom-error';
 
-export type ValidateReturn = Joi.ValidationResult;
+export const validate = <T, S>(
+  value: unknown,
+  struct: Struct<T, S>,
+  options?: {
+    coerce?: boolean;
+    mask?: boolean;
+    message?: string;
+  },
+) => {
+  const [error, res] = sup(value, struct, options);
 
-export const validate = <T extends object>(validator: Schema<T>, data: unknown, options?: Joi.ValidationOptions) => {
-  const result = validator.validate(data, options);
-  if (result.error) {
+  if (error) {
     throw new ValidationError(
-      result.error.message,
-      result.error.details.map((detail) => detail.message),
+      error.message,
+      error.failures().map((item) => `${item.key} ${item.message}`),
     );
   }
-  return result.value as T;
+  return res;
 };
