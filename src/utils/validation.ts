@@ -1,23 +1,15 @@
-import { Struct, StructError, assert, validate as sup } from 'superstruct';
+import type { ZodType, ParseParams } from 'zod';
 
 import { ValidationError } from './custom-error';
 
-export const validate = <T, S>(
-  value: unknown,
-  struct: Struct<T, S>,
-  options?: {
-    coerce?: boolean;
-    mask?: boolean;
-    message?: string;
-  },
-) => {
-  const [error, res] = sup(value, struct, options);
-
-  if (error) {
-    throw new ValidationError(
-      error.message,
-      error.failures().map((item) => `${item.key} ${item.message}`),
-    );
+export const validate = <T, S, P>(value: unknown, struct: ZodType<T, S, P>, params?: ParseParams) => {
+  const result = struct.safeParse(value, params);
+  if (result.success) {
+    return result.data;
   }
-  return res;
+
+  throw new ValidationError(
+    result.error.message,
+    result.error.issues.map((item) => item.message),
+  );
 };
